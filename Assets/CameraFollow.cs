@@ -12,9 +12,7 @@ public class CameraFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Quaternion rotation = transform.rotation;
-
-        rotation = Quaternion.Euler(angle);
+        Quaternion rotation = Quaternion.Euler(angle);
         transform.rotation = rotation;
     }
 

@@ -10,6 +10,7 @@ public class FlipperScript : MonoBehaviour
     
 
     Vector3 m_EulerAngleVelocity = new Vector3(0.0f, 1000.0f, 0.0f);
+    Quaternion defaultRotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 
     public bool bRight = false;
     bool bPressed = false;
@@ -18,6 +19,7 @@ public class FlipperScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        defaultRotation = transform.rotation;
         m_Rigidbody = gameObject.GetComponent<Rigidbody>();
         //Set the angular velocity of the Rigidbody (rotating around the Y axis, 100 deg/sec)
         if (!bRight)
@@ -60,8 +62,9 @@ public class FlipperScript : MonoBehaviour
         }
         if (!bPressed && bNeedUpdate)
         {
-            Quaternion deltaRotation = Quaternion.Euler(-m_EulerAngleVelocity * Time.fixedDeltaTime);
-            m_Rigidbody.MoveRotation(m_Rigidbody.rotation * deltaRotation);
+            transform.rotation = defaultRotation;
+            //Quaternion deltaRotation = Quaternion.Euler(-m_EulerAngleVelocity * Time.fixedDeltaTime);
+            //m_Rigidbody.MoveRotation(m_Rigidbody.rotation * deltaRotation);
         }
         bNeedUpdate = false;
     }

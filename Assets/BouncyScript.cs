@@ -9,9 +9,9 @@ public class BouncyScript : MonoBehaviour
     bool bNeedAddForce = false;
 
 
-    void HandleEnter(Vector3 reflected)
+    void HandleEnter(Vector3 reflected, GameObject collidedGameObject)
     {
-        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        Rigidbody rb = collidedGameObject.GetComponent<Rigidbody>();
         Vector3 addedForce = Vector3.Normalize(reflected) * coef;
 
         addedForce = Vector3.ClampMagnitude(addedForce, maxVelocity);
@@ -28,22 +28,22 @@ public class BouncyScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!bNeedAddForce && (collision.gameObject.tag == "StrikerReciver" || collision.gameObject.tag == "StrikerGiver"))
+        if (!bNeedAddForce)
         {
-            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+            Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
             Vector3 reflectedVelocity = Vector3.Reflect(rb.velocity, collision.contacts[0].normal);
-            HandleEnter(reflectedVelocity);
+            HandleEnter(reflectedVelocity, collision.gameObject);
         }
         
     }
     
     void OnTriggerEnter(Collider collider)
     {
-        if (!bNeedAddForce && (collider.gameObject.tag == "StrikerReciver" || collider.gameObject.tag == "StrikerGiver"))
+        if (!bNeedAddForce)
         {
-            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+            Rigidbody rb = collider.gameObject.GetComponent<Rigidbody>();
             Vector3 reflectedVelocity = -rb.velocity * coef;
-            HandleEnter(reflectedVelocity);
+            HandleEnter(reflectedVelocity, collider.gameObject);
         }
 
     }
