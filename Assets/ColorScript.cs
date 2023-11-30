@@ -17,19 +17,19 @@ public class ColorScript : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
         Debug.Log("OnTriggerEnter");
-        if (other.tag == "StrikerReciver")
+        if (collision.gameObject.tag == "StrikerReciver")
         {
             Debug.Log("StrikerReciver");
-            other.gameObject.GetComponent<Renderer>().material.color = gameObject.GetComponent<Renderer>().material.color;
+            collision.gameObject.GetComponent<Renderer>().material.color = gameObject.GetComponent<Renderer>().material.color;
         }
 
-        if (other.tag == "StrikerGiver")
+        if (collision.gameObject.tag == "StrikerGiver")
         {
             Debug.Log("StrikerGiver");
-            gameObject.GetComponent<Renderer>().material.color = other.gameObject.GetComponent<Renderer>().material.color;
+            gameObject.GetComponent<Renderer>().material.color = collision.gameObject.GetComponent<Renderer>().material.color;
         }
     }
 }
