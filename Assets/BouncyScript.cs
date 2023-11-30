@@ -6,59 +6,55 @@ public class BouncyScript : MonoBehaviour
 {
     public float coef = 1000.0f;
     public float maxVelocity = 1000.0f;
-    bool bNeedAddForceC = false;
     bool bNeedAddForce = false;
-    // Start is called before the first frame update
-    void Start()
+
+
+    void HandleEnter(Vector3 reflected)
     {
-        
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        Vector3 addedForce = Vector3.Normalize(reflected) * coef;
+
+        addedForce = Vector3.ClampMagnitude(addedForce, maxVelocity);
+        rb.AddForce(addedForce);
+        bNeedAddForce = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void HandleExit()
     {
-        
+        bNeedAddForce = false;
     }
+
+
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!bNeedAddForceC && (collision.gameObject.tag == "StrikerReciver" || collision.gameObject.tag == "StrikerGiver"))
+        if (!bNeedAddForce && (collision.gameObject.tag == "StrikerReciver" || collision.gameObject.tag == "StrikerGiver"))
         {
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
             Vector3 reflectedVelocity = Vector3.Reflect(rb.velocity, collision.contacts[0].normal);
-            Vector3 addedForce = Vector3.Normalize(reflectedVelocity) * coef;
-
-            Vector3 oldAddedForce = -rb.velocity * coef;
-
-            addedForce = Vector3.ClampMagnitude(addedForce, maxVelocity);
-            rb.AddForce(addedForce);
-            bNeedAddForceC = true;
+            HandleEnter(reflectedVelocity);
         }
         
     }
-
-    void OnCollisionExit(Collision collision)
-    {
-        bNeedAddForceC = false;
-    }
-    /*
+    
     void OnTriggerEnter(Collider collider)
     {
         if (!bNeedAddForce && (collider.gameObject.tag == "StrikerReciver" || collider.gameObject.tag == "StrikerGiver"))
         {
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-            Vector3 oldAddedForce = -rb.velocity * coef;
-            oldAddedForce = Vector3.ClampMagnitude(oldAddedForce, maxVelocity);
-            Debug.Log("oldAddedForce: " + oldAddedForce.ToString());
-            rb.AddForce(oldAddedForce);
-            bNeedAddForce = true;
+            Vector3 reflectedVelocity = -rb.velocity * coef;
+            HandleEnter(reflectedVelocity);
         }
 
     }
 
     void OnTriggerExit(Collider collider)
     {
-        bNeedAddForce = false;
+        HandleExit();
     }
-    */
+    void OnCollisionExit(Collision collision)
+    {
+        HandleExit();
+    }
+
 }

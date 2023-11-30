@@ -6,6 +6,8 @@ TagManager:
   tags:
   - StrikerReciver
   - StrikerGiver
+  - EndGame
+  - StartGame
   layers:
   - Default
   - TransparentFX
